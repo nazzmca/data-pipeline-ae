@@ -85,7 +85,7 @@ The current repository provides a lightweight scaffold for the full architecture
 - data/ — sample source files for local testing, including CSV examples and two Parquet data files with matching control files
 - src/pipeline/ — Python modules for ingestion and sample data loading
 - airflow/dags/ — Airflow DAG skeleton for orchestration
-- dbt/models/ — example dbt model structure
+- dbt/models/ — dbt staging, intermediate, mart, and security-check model examples
 - docs/architecture.md — architecture notes and design rationale
 
 ## Getting Started
@@ -113,7 +113,8 @@ The scaffold can be extended with:
 - decryption logic for encrypted files,
 - Snowflake load tasks and schema management,
 - dbt tests and documentation,
-- alerting and observability for production operations.
+- alerting and observability for production operations,
+- stricter security checks such as masking validation and output row-level controls.
 
 ## Data Preparation Focus Areas
 
