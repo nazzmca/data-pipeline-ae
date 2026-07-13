@@ -6,7 +6,7 @@ import pandas as pd
 
 
 def load_sample_data(path: str | None = None) -> list[dict[str, str]]:
-    default_path = Path(__file__).resolve().parents[2] / "data" / "sample_customers.csv"
+    default_path = Path(__file__).resolve().parents[2] / "data" / "csv" / "sample_customers.csv"
     target_path = Path(path) if path else default_path
 
     with target_path.open(newline="", encoding="utf-8") as handle:
@@ -19,6 +19,9 @@ def load_sample_dataset(data_dir: str | None = None) -> list[dict[str, object]]:
 
     for data_file in sorted(base_dir.glob("sample_*.parquet")):
         control_file = data_file.with_suffix(".ctrl.csv")
+        if not control_file.exists():
+            control_file = data_file.parent / "csv" / f"{data_file.stem}.ctrl.csv"
+
         business_date = ""
         record_count = 0
         rows: list[dict[str, str]] = []
