@@ -17,10 +17,17 @@ def load_sample_dataset(data_dir: str | None = None) -> list[dict[str, object]]:
     base_dir = Path(data_dir) if data_dir else Path(__file__).resolve().parents[2] / "data"
     datasets: list[dict[str, object]] = []
 
-    for data_file in sorted(base_dir.glob("sample_*.parquet")):
-        control_file = data_file.with_suffix(".ctrl.csv")
-        if not control_file.exists():
-            control_file = data_file.parent / "csv" / f"{data_file.stem}.ctrl.csv"
+    for data_file in sorted(base_dir.glob("*.parquet")):
+        control_candidates = [
+            data_file.parent / f"{data_file.name}.ctrl.csv",
+            data_file.with_suffix(".ctrl.csv"),
+            data_file.parent / "csv" / f"{data_file.stem}.ctrl.csv",
+            data_file.parent / f"{data_file.stem}.ctrl.csv",
+        ]
+
+        control_file = next((candidate for candidate in control_candidates if candidate.exists()), None)
+        if control_file is None:
+            control_file = data_file.parent / f"{data_file.name}.ctrl.csv"
 
         business_date = ""
         record_count = 0

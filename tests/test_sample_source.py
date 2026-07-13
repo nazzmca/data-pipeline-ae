@@ -10,8 +10,8 @@ class SampleSourceTests(unittest.TestCase):
         self.assertGreaterEqual(len(dataset), 2)
 
         data_files = {item["data_file"].name for item in dataset}
-        self.assertIn("sample_orders.parquet", data_files)
-        self.assertIn("sample_products.parquet", data_files)
+        self.assertIn("orders.parquet", data_files)
+        self.assertIn("products.parquet", data_files)
 
         for item in dataset:
             self.assertEqual(item["record_count"], len(item["rows"]))
