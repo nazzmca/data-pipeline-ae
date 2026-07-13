@@ -82,7 +82,7 @@ The current repository provides a lightweight scaffold for the full architecture
 
 ## Repository Structure
 
-- data/ — sample source files for local testing, including CSVs, control files, and a Parquet sample
+- data/ — sample source files for local testing, including CSV examples and two Parquet data files with matching control files
 - src/pipeline/ — Python modules for ingestion and sample data loading
 - airflow/dags/ — Airflow DAG skeleton for orchestration
 - dbt/models/ — example dbt model structure
