@@ -1,45 +1,124 @@
-# Australian Ethical Data Engineering Interview Project
+# Data Pipeline Project
 
-This starter project mirrors the interview scenario: ingest an encrypted Parquet file from Azure Blob Storage, decrypt and transform it, and load it into Snowflake for analytics.
+This repository is a starter implementation of a secure, scalable data preparation pipeline for AE. It demonstrates a practical pattern for moving data from a source system into a warehouse, with an emphasis on orchestration, transformation, security, and governance.
 
-## Scenario Summary
+## Project Goal
 
-A small data engineering team needs a production-ready pipeline that:
-- ingests an encrypted Parquet file from Azure Blob Storage,
-- decrypts and transforms the data,
-- loads the result into Snowflake,
-- is orchestrated with Airflow,
-- follows strong security and governance principles.
-
-## Project Structure
-
-- docs/architecture.md — architecture and design notes
-- src/pipeline — Python modules for ingestion, decryption, and Snowflake loading
-- airflow/dags — Airflow DAG skeleton
-- dbt/models — dbt staging model example
+The project is designed to show how a team could build a production-ready pipeline that:
+- ingests a file-based source from Azure Blob Storage,
+- applies decryption, validation, and transformation steps,
+- orchestrates the workflow with Airflow,
+- models the data with dbt,
+- loads the curated output into Snowflake for analytics and reporting.
 
 ## Architecture Overview
 
-```mermaid
-flowchart LR
-    A[Azure Blob Storage] --> B[Airflow DAG]
-    B --> C[Decrypt & Transform]
-    C --> D[dbt Models]
-    D --> E[Snowflake]
-    E --> F[Analytics & Reporting]
+The current repository provides a lightweight scaffold for the full architecture. The design follows a standard batch-oriented data preparation flow that can be extended into a production platform.
+
+### End-to-End Flow
+
+1. A source file arrives in Azure Blob Storage.
+2. A Python ingestion step downloads and validates the file.
+3. Airflow orchestrates the workflow and handles retries and failure paths.
+4. A transformation stage standardises the data and prepares it for modelling.
+5. dbt creates curated models for downstream reporting.
+6. Snowflake stores the final tables for analytics and business consumption.
+
+### Raw Diagram
+
+```text
++------------------------+
+| Azure Blob Storage    |
+| - incoming files      |
+| - encrypted parquet   |
++-----------+------------+
+            |
+            v
++------------------------+
+| Python Ingestion Layer|
+| - download file       |
+| - validate format     |
+| - decrypt if required |
++-----------+------------+
+            |
+            v
++------------------------+
+| Airflow Orchestration  |
+| - DAG scheduling      |
+| - retries / alerts    |
+| - task dependencies   |
++-----------+------------+
+            |
+            v
++------------------------+
+| Transformation Layer   |
+| - schema mapping      |
+| - data quality checks |
+| - business rules      |
++-----------+------------+
+            |
+            v
++------------------------+
+| dbt Models            |
+| - staging             |
+| - intermediate        |
+| - marts               |
++-----------+------------+
+            |
+            v
++------------------------+
+| Snowflake Warehouse   |
+| - raw / curated tables|
+| - analytics & reporting|
++------------------------+
 ```
 
-## Quick Start
+### Component Responsibilities
+- Azure Blob Storage: stores the incoming source files.
+- Python: handles file download, preprocessing, and integration logic.
+- Airflow: orchestrates job execution, retries, and scheduling.
+- dbt: transforms raw inputs into curated models.
+- Snowflake: serves as the analytics warehouse.
 
-1. Copy .env.example to .env and fill in your values.
-2. Install dependencies:
+## Repository Structure
+
+- data/ — sample source files for local testing
+- src/pipeline/ — Python modules for ingestion and sample data loading
+- airflow/dags/ — Airflow DAG skeleton for orchestration
+- dbt/models/ — example dbt model structure
+- docs/architecture.md — architecture notes and design rationale
+
+## Getting Started
+
+1. Create and activate a Python environment.
+2. Install the dependencies:
    pip install -r requirements.txt
-3. Review the architecture notes in docs/architecture.md.
-4. Use the Airflow DAG as the orchestration starting point for the interview solution.
+3. Copy .env.example to .env and populate the required values.
+4. Run the sample loader locally:
+   python3 src/pipeline/sample_source.py
+5. Review the architecture notes in docs/architecture.md for the intended end-to-end design.
 
-## Security & Governance Notes
+## Security and Governance
 
-- Use Azure Key Vault or managed secrets for encryption keys and credentials.
-- Encrypt data in transit with TLS and at rest in Azure and Snowflake.
-- Apply Snowflake RBAC with separate roles for ingestion, transformation, and reporting.
-- Add data quality tests and monitoring hooks before production rollout.
+This project is structured around practical controls such as:
+- secrets and credentials managed through environment variables or vault-backed services,
+- TLS for data in transit,
+- least-privilege access patterns for Snowflake roles,
+- data quality checks and monitoring hooks for production readiness.
+
+## Suggested Future Enhancements
+
+The scaffold can be extended with:
+- Azure Key Vault integration for secrets,
+- decryption logic for encrypted files,
+- Snowflake load tasks and schema management,
+- dbt tests and documentation,
+- alerting and observability for production operations.
+
+## Data Preparation Focus Areas
+
+This scaffold is intended to help you discuss:
+- end-to-end architecture design,
+- integration between Airflow, Python, dbt, and Snowflake,
+- security boundaries and governance,
+- operational considerations such as retries, observability, and schema evolution.
